@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Go Parking</string>
+    <string name="maps_api_key">AIzaSyB-aVUtcniPvTWTHCdaMMp-eJpTL8JiX0Q</string>
+    <string name="none">ehehe</string>
+    <string name="parking_description">Go Parking offers a modern and convenient parking solution that caters to the needs of both commuters and visitors alike. As you enter the spacious parking lot, you\'ll immediately notice the well-designed layout that ensures easy navigation and smooth traffic flow. The facility boasts state-of-the-art technology, providing automated ticketing and payment systems for a hassle-free experience.</string>
+</resources>

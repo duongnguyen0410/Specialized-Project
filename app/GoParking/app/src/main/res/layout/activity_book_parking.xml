@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".BookParkingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/back">
+        </ImageButton>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Book Parking Details"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
+            android:textSize="25sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Date"
+        android:textSize="15sp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+    <FrameLayout
+        android:id="@+id/dateSelect"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/gray_radius">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dd/mm/yyyy"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/shLL"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Hour"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/shSelect"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/gray_radius">
+
+                <TextView
+                    android:id="@+id/tvStartHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Hour"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/ehSelect"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/gray_radius">
+
+                <TextView
+                    android:id="@+id/tvEndHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick parking lot"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/imageSlotA"
+            android:layout_width="300px"
+            android:layout_height="300px"
+            android:src="@drawable/parking_icon"/>
+
+        <ImageView
+            android:id="@+id/imageSlotB"
+            android:layout_width="300px"
+            android:layout_height="300px"
+            android:src="@drawable/parking_icon"/>
+
+        <ImageView
+            android:id="@+id/imageSlotC"
+            android:layout_width="300px"
+            android:layout_height="300px"
+            android:src="@drawable/parking_icon"/>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioSlotA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Slot A"
+            android:textSize="16sp"
+            android:buttonTint="@drawable/radiobutton_selector"/>
+
+        <RadioButton
+            android:id="@+id/radioSlotB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Slot B"
+            android:textSize="16sp"
+            android:layout_marginHorizontal="35dp"
+            android:buttonTint="@drawable/radiobutton_selector"/>
+
+        <RadioButton
+            android:id="@+id/radioSlotC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Slot C"
+            android:textSize="16sp"
+            android:buttonTint="@drawable/radiobutton_selector"/>
+
+    </RadioGroup>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_marginTop="30dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/totalCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00.000 VND"
+            android:textSize="25sp"
+            android:layout_marginTop="5dp"
+            android:textColor="#bc0063"
+            android:textStyle="bold"
+            android:layout_gravity="bottom"/>
+
+        <TextView
+            android:id="@+id/hourQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" / 0 hours"
+            android:textColor="#A1A1A1"
+            android:textStyle="bold"
+            android:layout_gravity="bottom"/>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:text="Continue"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>
