@@ -14,10 +14,22 @@ async def create_spot(spot: Spot):
 
 @router.put('/spot/update/{id}')
 async def update_spot(id, state: str):
-    db["spots"].find_one_and_update({"_id":ObjectId(id)},{
-        "$set": {"status": state}
-    })
-    return spotEntity(db["spots"].find_one({"_id":ObjectId(id)}))
+    if state == "reserved":
+        latest_reservation = db["reservations"].find({"spot_id": id}).sort("_id", -1).limit(1)
+        latest_reservation_data = latest_reservation[0]
+        db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
+            "$set": {
+                "status": state,
+                "latest_reservation": latest_reservation_data
+            }
+        })
+    else:
+        db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
+            "$set": {"status": state},
+            "$unset": {"latest_reservation": ""}
+        })
+
+    return spotEntity(db["spots"].find_one({"_id": ObjectId(id)}))
 
 @router.get('/spot/get/all')
 async def find_all_spots():

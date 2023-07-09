@@ -11,11 +11,16 @@ def usersEntity(entity) -> list:
     return [userEntity(item) for item in entity]
 
 def spotEntity(item) -> dict:
-    return {
-        "id":str(item["_id"]),
-        "spot_id":item["spot_id"],
-        "status":item["status"]   
+    spot_entity = {
+        "id": str(item["_id"]),
+        "spot_id": item.get("spot_id"),
+        "status": item.get("status"),
+        "latest_reservation": item.get("latest_reservation")
     }
+    if spot_entity["latest_reservation"] is not None:
+        spot_entity["latest_reservation"]["_id"] = str(spot_entity["latest_reservation"]["_id"])
+    return spot_entity
+
 def spotsEntity(entity) -> list:
     return [spotEntity(item) for item in entity]
 
