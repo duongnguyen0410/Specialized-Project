@@ -48,7 +48,7 @@ from utils.general import (LOGGER, Profile, check_file, check_img_size, check_im
                            increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer, xyxy2xywh)
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, smart_inference_mode
-
+from utils.scan_qr import scan_qr_code
 
 @smart_inference_mode()
 def run(
@@ -255,7 +255,19 @@ def main(opt):
     check_requirements(ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
     run(**vars(opt))
 
+def check_condition():
+    # Kiểm tra điều kiện 1+1=2
+    if 1 + 1 == 2:
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     opt = parse_opt()
-    main(opt)
+
+    # Kiểm tra điều kiện trước khi thực hiện detect
+    if check_condition():
+        print("check true")
+        main(opt)
+    else:
+        print("Điều kiện không đúng. Không thực hiện detect.")
