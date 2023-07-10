@@ -14,7 +14,7 @@ async def create_spot(spot: Spot):
 
 @router.put('/spot/update/{id}')
 async def update_spot(id, state: str):
-    if state == "reserved":
+    if state == "reserved" or state == "occupied":
         latest_reservation = db["reservations"].find({"spot_id": id}).sort("_id", -1).limit(1)
         latest_reservation_data = latest_reservation[0]
         db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
