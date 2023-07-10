@@ -6,7 +6,7 @@ const { resolve } = require('dns');
 const { error } = require('console');
 
 // Path to image folder
-const imageFolderPath = 'D:\\VScode\\MC\\yolov5\\capture';
+const imageFolderPath = 'D:\\GITHUB\\Specialized-Project\\model\\yolov5\\capture';
 
 // Hash calculator function
 const calculateImageHash = (imagePath) => {
