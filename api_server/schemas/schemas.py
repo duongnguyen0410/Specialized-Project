@@ -29,9 +29,10 @@ def reservationEntity(item) -> dict:
         "id":str(item["_id"]),
         "user_id":item["user_id"],
         "spot_id":item["spot_id"],
-        "reservation_time":item["reservation_time"],
-        "start_hour":item["start_hour"],
-        "end_hour":item["end_hour"]
+        "date":item["date"],
+        "duration":item["duration"],
+        "hours":item["hours"],
+        "total_cost":item["total_cost"]
     }
 def reservationsEntity(entity) -> list:
     return [reservationEntity(item) for item in entity]
