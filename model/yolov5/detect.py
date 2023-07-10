@@ -271,15 +271,22 @@ def main(opt):
     run(**vars(opt))
 
 def serial_comm():
-    ser = serial.Serial('COM3', 9600) 
-    data = "accept"
+    ser = serial.Serial('COM6', 9600)
+    data = 'accept'
     ser.write(data.encode())
-    
-    #received_data = ser.readline()
-    #decoded_data = received_data.decode().strip()
-    #print(decoded_data)
-
+    while True:
+        received_data = ser.readline()
+        decoded_data = received_data.decode().strip()
+        print(decoded_data)
     ser.close()
+    
+    # ser = serial.Serial('COM5', 9600) 
+    # data = "accept"
+    # ser.write(data.encode())
+    
+    # received_data = ser.readline()
+    # decoded_data = received_data.decode().strip()
+    # print(decoded_data)
 
 if __name__ == '__main__':
     opt = parse_opt()
