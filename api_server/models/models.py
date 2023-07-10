@@ -13,6 +13,7 @@ class Spot(BaseModel):
 class Reservation(BaseModel):
     user_id: str
     spot_id: str
-    reservation_time: str
-    start_hour: str
-    end_hour: str
+    date: str
+    duration: str
+    hours: str
+    total_cost: str
