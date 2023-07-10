@@ -36,6 +36,9 @@ from pathlib import Path
 
 import torch
 
+import serial
+import time
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
@@ -177,12 +180,24 @@ def run(
             # Stream results
             im0 = annotator.result()
             if view_img:
+                capture_dir = "capture"
                 if platform.system() == 'Linux' and p not in windows:
                     windows.append(p)
                     cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
                 cv2.imshow(str(p), im0)
-                cv2.waitKey(1)  # 1 millisecond
+
+                if cv2.waitKey(1) == ord('c'): 
+                    if not os.path.exists(capture_dir):
+                        os.makedirs(capture_dir)
+
+                    file_count = len(os.listdir(capture_dir))
+                    image_name = f"captured_image_{file_count+1}.jpg"
+                    image_path = os.path.join(capture_dir, image_name)
+                    cv2.imwrite(image_path, im0)
+
+                    cv2.destroyAllWindows()
+                    exit(0)
 
             # Save results (image with detections)
             if save_img:
@@ -255,19 +270,22 @@ def main(opt):
     check_requirements(ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
     run(**vars(opt))
 
-def check_condition():
-    # Kiểm tra điều kiện 1+1=2
-    if 1 + 1 == 2:
-        return True
-    else:
-        return False
+def serial_comm():
+    ser = serial.Serial('COM3', 9600) 
+    data = "accept"
+    ser.write(data.encode())
+    
+    #received_data = ser.readline()
+    #decoded_data = received_data.decode().strip()
+    #print(decoded_data)
+
+    ser.close()
 
 if __name__ == '__main__':
     opt = parse_opt()
 
-    # Kiểm tra điều kiện trước khi thực hiện detect
-    if check_condition():
-        print("check true")
+    if (scan_qr_code()):
+        serial_comm()    
         main(opt)
     else:
-        print("Điều kiện không đúng. Không thực hiện detect.")
+        print("Invalid code.")

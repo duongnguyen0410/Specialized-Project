@@ -23,11 +23,16 @@ def scan_qr_code():
 
             # Giải mã nội dung từ mã QR
             barcode_data = barcode.data.decode("utf-8")
-            print(barcode_data)
             barcode_type = barcode.type
 
             # Hiển thị nội dung mã QR và loại mã QR lên khung hình
             cv2.putText(frame, f"{barcode_data} ({barcode_type})", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            print("qr_code data:", barcode_data)
+            if (barcode_data == "64aada1751c18b0ec38d2ae8"):
+                print("accept qr_code")
+                cap.release()
+                cv2.destroyAllWindows()
+                return True
 
         # Hiển thị khung hình
         cv2.imshow("QR Code Scanner", frame)
