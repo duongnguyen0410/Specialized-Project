@@ -226,15 +226,22 @@
 
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnContinue"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_background"
-        android:text="Continue"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnContinue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="Continue"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -5,6 +5,7 @@ class User(BaseModel):
     email: str
     password: str
     phone: str
+    license_plate: str
 
 class Spot(BaseModel):
     spot_id: str
