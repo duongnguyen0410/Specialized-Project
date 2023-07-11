@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi import HTTPException
 
 from models.models import User
 from config.db import db
@@ -11,6 +12,14 @@ router = APIRouter()
 async def create_user(user: User):
     db["users"].insert_one(dict(user))
     return usersEntity(db["users"].find())
+
+@router.post('/user/login')
+async def login_user(email: str, password: str):
+    result = db["users"].find_one({"email": email, "password": password})
+    if result:
+        return userEntity(result)
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 @router.put('/user/update/{id}')
 async def update_user(id, user: User):
