@@ -4,7 +4,8 @@ def userEntity(item) -> dict:
         "name":item["name"],
         "email":item["email"],
         "password":item["password"],
-        "phone":item["phone"]
+        "phone":item["phone"],
+        "license_plate":item["license_plate"]
     }
 
 def usersEntity(entity) -> list:
@@ -35,4 +36,6 @@ def reservationEntity(item) -> dict:
         "total_cost":item["total_cost"]
     }
 def reservationsEntity(entity) -> list:
-    return [reservationEntity(item) for item in entity]
+    return {
+        "reservations": [reservationEntity(item) for item in entity]
+    } 
