@@ -7,17 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:background="@color/white"
-    tools:context=".LoginActivity"
-    android:id="@+id/login_activity_root_layout">
-
-    <ImageButton
-        android:id="@+id/btn_backLogin"
-        android:layout_width="40dp"
-        android:layout_height="30dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/back">
-    </ImageButton>
+    tools:context=".LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +26,7 @@
         android:layout_marginBottom="15dp">
 
         <EditText
-            android:id="@+id/usr"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:paddingVertical="10dp"
@@ -61,7 +51,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
 
         <EditText
             android:id="@+id/pwd"
@@ -69,6 +60,7 @@
             android:layout_height="55dp"
             android:background="@drawable/user_pwd"
             android:hint="Password"
+            android:inputType="textPassword"
             android:paddingVertical="10dp"
             android:paddingStart="53dp"
             android:paddingEnd="10dp"
@@ -83,165 +75,37 @@
             android:layout_centerVertical="true"
             android:src="@drawable/padlock_faded">
         </ImageView>
-
-        <ImageView
-            android:id="@+id/show_pwd_icon"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_marginEnd="15dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/show_pwd_faded">
-        </ImageView>
-
     </RelativeLayout>
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:buttonTint="#bc0063"
-        android:textColor="#bc0063"
-        android:textStyle="bold"
-        android:text="Remember me"
-        android:textSize="14sp"
-        android:layout_marginVertical="7dp">
-    </CheckBox>
-
-    <Button
-        android:id="@+id/btn_sign_in"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:backgroundTint="#bc0063"
-        android:paddingVertical="15dp"
-        android:text="Sign in"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/txt_restore_pwd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:textColor="#bc0063"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="Forgot the password?">
-    </TextView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:weightSum="10">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            android:background="#EAEAEA">
-        </View >
-
-        <TextView
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_log_in"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="or continue with"
-            android:textAlignment="center"
-            android:textColor="#a9a9a9"
-            android:textSize="17sp"
-            android:textStyle="bold">
-        </TextView>
+            android:layout_above="@+id/btn_sign_up"
+            android:background="@drawable/radius2"
+            android:paddingVertical="15dp"
+            android:textAllCaps="false"
+            android:text="Log in"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            android:background="#EAEAEA">
-        </View>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:background="@drawable/login_options">
-
-            <ImageView
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_gravity="center"
-                android:src="@drawable/facebook">
-            </ImageView>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/login_options">
-
-            <ImageView
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_gravity="center"
-                android:src="@drawable/google">
-            </ImageView>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:background="@drawable/login_options">
-
-            <ImageView
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_gravity="center"
-                android:src="@drawable/apple">
-            </ImageView>
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_sign_up"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Don't have an account ?  "
-            android:textColor="#8C8B8B"
-            android:textSize="16sp">
-        </TextView>
-
-        <TextView
-            android:id="@+id/txt_sign_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/radius"
+            android:paddingVertical="15dp"
             android:text="Sign up"
-            android:textColor="#bc0063"
-            android:textSize="16sp"
-            android:textStyle="bold">
-        </TextView>
+            android:textAllCaps="false"
+            android:textColor="#BC0063"
+            android:textSize="17sp"
+            android:layout_marginVertical="10dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
