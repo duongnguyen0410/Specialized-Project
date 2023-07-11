@@ -174,6 +174,7 @@ def run(
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         annotator.box_label(xyxy, label, color=colors(c, True))
+                        
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
@@ -185,7 +186,7 @@ def run(
                     windows.append(p)
                     cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
-                cv2.imshow(str(p), im0)
+                cv2.imshow("Plate detection", im0)
 
                 if cv2.waitKey(1) == ord('c'): 
                     if not os.path.exists(capture_dir):
@@ -274,25 +275,13 @@ def serial_comm():
     ser = serial.Serial('COM6', 9600)
     data = 'accept'
     ser.write(data.encode())
-    while True:
-        received_data = ser.readline()
-        decoded_data = received_data.decode().strip()
-        print(decoded_data)
-    ser.close()
     
-    # ser = serial.Serial('COM5', 9600) 
-    # data = "accept"
-    # ser.write(data.encode())
-    
-    # received_data = ser.readline()
-    # decoded_data = received_data.decode().strip()
-    # print(decoded_data)
 
 if __name__ == '__main__':
     opt = parse_opt()
 
     if (scan_qr_code()):
-        serial_comm()    
+        #serial_comm()    
         main(opt)
     else:
         print("Invalid code.")
