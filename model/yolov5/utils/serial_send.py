@@ -1,15 +1,10 @@
 import serial
-import time
 
-ser = serial.Serial('COM3', 9600) 
-
-while True:
-    data = "accept"
-    ser.write(data.encode())
-
-    received_data = ser.readline()
-    decoded_data = received_data.decode().strip()
-    print(decoded_data)
-    time.sleep(1)
-    
-ser.close()
+def serial_comm():
+    ser = serial.Serial('COM3', 9600)
+    data = 'accept'
+    bytes_written = ser.write(data.encode())  # Ghi chuỗi data vào cổng Serial
+    if bytes_written == len(data.encode()):
+        print('Write successful')
+    else:
+        print('Write failed')
