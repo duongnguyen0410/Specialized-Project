@@ -61,6 +61,16 @@ def getSpot():
         return reservation_id
     else:
         return None
+    
+def postLP(license_plate):
+    url = 'http://192.168.0.101:8000/spot/lp/detected/64aad77d51c18b0ec38d2ae4?license_plate=' + license_plate
+    reponse = requests.post(url)
+    if reponse.status_code == 200:
+        json_data = reponse.json()
+        print(json_data)
+    else: 
+        print("POST failed.")
 
 # Chạy hàm quét mã QR
 # scan_qr_code()
+postLP("60F4 244.57")

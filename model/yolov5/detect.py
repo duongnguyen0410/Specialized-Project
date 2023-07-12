@@ -41,6 +41,7 @@ import time
 
 import easyocr
 import hashlib
+import requests
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -196,7 +197,8 @@ def run(
                         os.makedirs(capture_dir)
                     image_name = "crop_image.jpg"
                     save_one_box(xyxy, imc, file=save_dir / image_name, BGR=True)
-                    OCR(save_dir / image_name)
+                    lp = OCR(save_dir / image_name)
+                    postLP(lp)
                     hash(save_dir / image_name)
                     exit(0)
 
@@ -272,7 +274,7 @@ def main(opt):
     run(**vars(opt))
 
 def serial_comm():
-    ser = serial.Serial('COM6', 9600)
+    ser = serial.Serial('COM3', 9600)
     data = 'accept'
     ser.write(data.encode())
 
@@ -282,6 +284,7 @@ def OCR(path):
     result = reader.readtext(IMAGE_PATH)
     plate = ' '.join(detect[1] for detect in result)
     print("License plate: ", plate)
+    return plate
 
 def hash(path):
     with open(str(path), "rb") as f:
@@ -289,6 +292,16 @@ def hash(path):
     
     hash = hashlib.sha256(data).hexdigest()
     print("Image hash: ", hash)
+
+
+def postLP(license_plate):
+    url = 'http://192.168.0.101:8000/spot/lp/detected/64aad77d51c18b0ec38d2ae4?license_plate=' + license_plate
+    reponse = requests.post(url)
+    if reponse.status_code == 200:
+        json_data = reponse.json()
+        print(json_data)
+    else: 
+        print("POST failed.")
     
 
 if __name__ == '__main__':
