@@ -39,6 +39,8 @@ import torch
 import serial
 import time
 
+import easyocr
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
@@ -191,13 +193,10 @@ def run(
                 if cv2.waitKey(1) == ord('c'): 
                     if not os.path.exists(capture_dir):
                         os.makedirs(capture_dir)
-
                     file_count = len(os.listdir(capture_dir))
-                    image_name = f"captured_image_{file_count+1}.jpg"
-                    image_path = os.path.join(capture_dir, image_name)
-                    cv2.imwrite(image_path, im0)
-
-                    cv2.destroyAllWindows()
+                    image_name = "crop_image.jpg"
+                    save_one_box(xyxy, imc, file=save_dir / image_name, BGR=True)
+                    OCR(save_dir / image_name)
                     exit(0)
 
             # Save results (image with detections)
@@ -275,6 +274,13 @@ def serial_comm():
     ser = serial.Serial('COM6', 9600)
     data = 'accept'
     ser.write(data.encode())
+
+def OCR(path):
+    IMAGE_PATH = str(path)
+    reader = easyocr.Reader(['en'])
+    result = reader.readtext(IMAGE_PATH)
+    plate = ' '.join(detect[1] for detect in result)
+    print("EXTRACT: ", plate)
     
 
 if __name__ == '__main__':

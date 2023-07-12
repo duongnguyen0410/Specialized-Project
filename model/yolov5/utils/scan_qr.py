@@ -63,4 +63,4 @@ def getSpot():
         return None
 
 # Chạy hàm quét mã QR
-#scan_qr_code()
+# scan_qr_code()
