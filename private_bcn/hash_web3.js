@@ -1,7 +1,7 @@
 const Web3 = require('web3');
 const web3 = new Web3('http://127.0.0.1:7545'); 
 
-const contractAddress = '0xce473f276a57bF21b463b8e612d1E7E2dDdfBE1B'; 
+const contractAddress = '0x9bbe041f71A1755672b37dc5Ec944F2D391BAA86'; 
 
 const fs = require('fs');
 
