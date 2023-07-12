@@ -40,6 +40,7 @@ import serial
 import time
 
 import easyocr
+import hashlib
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -193,10 +194,10 @@ def run(
                 if cv2.waitKey(1) == ord('c'): 
                     if not os.path.exists(capture_dir):
                         os.makedirs(capture_dir)
-                    file_count = len(os.listdir(capture_dir))
                     image_name = "crop_image.jpg"
                     save_one_box(xyxy, imc, file=save_dir / image_name, BGR=True)
                     OCR(save_dir / image_name)
+                    hash(save_dir / image_name)
                     exit(0)
 
             # Save results (image with detections)
@@ -280,7 +281,14 @@ def OCR(path):
     reader = easyocr.Reader(['en'])
     result = reader.readtext(IMAGE_PATH)
     plate = ' '.join(detect[1] for detect in result)
-    print("EXTRACT: ", plate)
+    print("License plate: ", plate)
+
+def hash(path):
+    with open(str(path), "rb") as f:
+        data = f.read()
+    
+    hash = hashlib.sha256(data).hexdigest()
+    print("Image hash: ", hash)
     
 
 if __name__ == '__main__':
