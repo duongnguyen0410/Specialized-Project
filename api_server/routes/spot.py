@@ -24,7 +24,7 @@ async def post_lp_detected(id, license_plate: str):
 
 @router.put('/spot/update/{id}')
 async def update_spot(id, state: str):
-    if state == "reserved" or "occupied":
+    if state == "reserved":
         latest_reservation = db["reservations"].find({"spot_id": id}).sort("_id", -1).limit(1)
         latest_reservation_data = latest_reservation[0]
         db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
@@ -36,14 +36,28 @@ async def update_spot(id, state: str):
                 "lp_detected": ""
             }
         })
-    else:
+
+    if state == "occupied":
+        latest_reservation = db["reservations"].find({"spot_id": id}).sort("_id", -1).limit(1)
+        latest_reservation_data = latest_reservation[0]
         db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
-            "$set": {"status": state},
-            "$unset": {
-                "latest_reservation": "",
-                "lp_detected": ""}
+            "$set": {
+                "status": state,
+                "latest_reservation": latest_reservation_data
+            },
         })
 
+    if state == "available":
+        print("true")
+        db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
+            "$set": {
+                "status": state
+            },
+            "$unset": {
+                "latest_reservation": "",
+                "lp_detected": ""
+            }
+        })
     return spotEntity(db["spots"].find_one({"_id": ObjectId(id)}))
 
 @router.get('/spot/get/all')
