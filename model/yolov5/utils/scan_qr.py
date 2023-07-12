@@ -1,4 +1,5 @@
 import cv2
+import requests
 from pyzbar import pyzbar
 
 def scan_qr_code():
@@ -28,11 +29,13 @@ def scan_qr_code():
             # Hiển thị nội dung mã QR và loại mã QR lên khung hình
             cv2.putText(frame, f"{barcode_data} ({barcode_type})", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             print("qr_code data:", barcode_data)
-            if (barcode_data == "64aada1751c18b0ec38d2ae8"):
+            if (barcode_data == getSpot()):
                 print("accept qr_code")
                 cap.release()
                 cv2.destroyAllWindows()
                 return True
+            else: 
+                print("ivalid code.")
 
         # Hiển thị khung hình
         cv2.imshow("QR Code Scanner", frame)
@@ -44,6 +47,20 @@ def scan_qr_code():
     # Giải phóng camera và đóng cửa sổ
     cap.release()
     cv2.destroyAllWindows()
+
+def getSpot():
+    url = 'http://192.168.0.101:8000/spot/get/64aad77d51c18b0ec38d2ae4'
+    reponse = requests.get(url)
+    if reponse.status_code == 200:
+        json_data = reponse.json()
+        latest_reservation = json_data.get('latest_reservation')
+
+        if latest_reservation:
+            reservation_id = latest_reservation.get('_id')
+            print(reservation_id)
+        return reservation_id
+    else:
+        return None
 
 # Chạy hàm quét mã QR
 # scan_qr_code()

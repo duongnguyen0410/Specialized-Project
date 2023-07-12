@@ -3,10 +3,14 @@ package com.example.goparking
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.FrameLayout
@@ -24,6 +28,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -60,14 +67,13 @@ class BookParkingActivity : AppCompatActivity() {
     private lateinit var myFormat: String
     private lateinit var sdf: SimpleDateFormat
 
-    private val myRef = FirebaseDatabase.getInstance().reference
-    private val slotAref = myRef.child("slotA/state")
-    private val slotBref = myRef.child("slotB/state")
-    private val slotCref = myRef.child("slotC/state")
-
     private lateinit var selectOption: String
     private var diffInMinutes by Delegates.notNull<Long>()
     private lateinit var formattedCost: String
+
+    private var idSpotA = "64aad77d51c18b0ec38d2ae4"
+    private var idSpotB = "64aad78651c18b0ec38d2ae5"
+    private var idSpotC = "64aad78c51c18b0ec38d2ae6"
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,22 +81,12 @@ class BookParkingActivity : AppCompatActivity() {
         binding = ActivityBookParkingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dateSelect = binding.dateSelect
-        shSelect = binding.shSelect
-        ehSelect = binding.ehSelect
-        btContinue = binding.btnContinue
-        tvDate = binding.tvDate
-        tvStartHour = binding.tvStartHour
-        tvEndHour = binding.tvEndHour
-        tvTotalCost = binding.totalCost
-        tvHoursQuantity = binding.hourQuantity
-        ivSlotA = binding.imageSlotA
-        ivSlotB = binding.imageSlotB
-        ivSlotC = binding.imageSlotC
-        radioGroup = binding.radioGroup
-        radioSlotA = binding.radioSlotA
-        radioSlotB = binding.radioSlotB
-        radioSlotC = binding.radioSlotC
+        setColorStatusBar()
+
+        val userId = intent.getStringExtra("userID")
+        Log.e("userID", "onCreate: $userId")
+
+        binding()
 
         btBack = binding.btnBack
         btBack.setOnClickListener {
@@ -98,13 +94,27 @@ class BookParkingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        retreiveData(slotAref, ivSlotA, radioSlotA)
-        retreiveData(slotBref, ivSlotB, radioSlotB)
-        retreiveData(slotCref, ivSlotC, radioSlotC)
+        getSpot(idSpotA, ivSlotA, radioSlotA)
+        getSpot(idSpotB, ivSlotB, radioSlotB)
+        getSpot(idSpotC, ivSlotC, radioSlotC)
 
         radioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
             val radioButton: RadioButton = findViewById(checkedId)
             selectOption = radioButton.text.toString()
+
+            when (selectOption){
+                "Spot 001" -> {
+                    selectOption = idSpotA
+                }
+
+                "Spot 002" -> {
+                    selectOption = idSpotB
+                }
+
+                "Spot 003" -> {
+                    selectOption = idSpotC
+                }
+            }
 
             Log.e("radio", "onCreate: $selectOption")
         }
@@ -169,10 +179,16 @@ class BookParkingActivity : AppCompatActivity() {
                 formattedCost
             )
 
-            Log.e("bookinginfo", "onCreate: $bookingInfo")
-            val intent = Intent(this, ReviewSummaryActivity::class.java)
-            intent.putExtra("bookingInfo", bookingInfo)
-            startActivity(intent)
+            val requestBody = ReservationApiBody(
+                userId!!,
+                selectOption,
+                tvDate.text.toString(),
+                diffInMinutes.toString(),
+                hours.toString(),
+                formattedCost
+            )
+
+            createReservation(requestBody, bookingInfo)
         }
     }
 
@@ -206,25 +222,109 @@ class BookParkingActivity : AppCompatActivity() {
             tvHoursQuantity.setText(" / $hours hours")
     }
 
-    private fun retreiveData(ref: DatabaseReference, imageView: ImageView, radioButton: RadioButton){
-        val listener = object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val state = snapshot.getValue<String> ()
-                Log.e("firebase", "onDataChange: $state")
-
-                if (state.equals("occupied")) {
-                    imageView.setImageResource(R.drawable.parking_car_icon)
-                    radioButton.isClickable = false
-                    radioButton.isFocusable = false
+    private fun getSpot(id: String, imageView: ImageView, radioButton: RadioButton){
+        val apiService = ParkingApiClient.create()
+        val call = apiService.getSpot(id)
+        call.enqueue(object : Callback<SpotApiResponse?> {
+            override fun onResponse(
+                call: Call<SpotApiResponse?>,
+                response: Response<SpotApiResponse?>
+            ) {
+                if (response.isSuccessful){
+                    Log.e("get /spot/{id}", "onResponse: ")
+                    val status = response.body()?.status
+                    if (status.equals("available")) {
+                        imageView.setImageResource(R.drawable.parking_icon)
+                        radioButton.isEnabled = true
+                    } else {
+                        imageView.setImageResource(R.drawable.parking_car_icon)
+                        radioButton.isEnabled = false
+                    }
                 }
-                else
-                    imageView.setImageResource(R.drawable.parking_icon)
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("firebase", "Failed to read value.", error.toException())
+            override fun onFailure(call: Call<SpotApiResponse?>, t: Throwable) {
+                Log.e("get /spot/{id}", "onFailure: $t")
             }
+        })
+    }
+
+    private fun updateSpot(bookingInfo: BookingInfo, reservationID: String){
+        val apiService = ParkingApiClient.create()
+        val call = apiService.putSpot(bookingInfo.parkingSpot, "reserved")
+        call.enqueue(object : Callback<SpotApiResponse?> {
+            override fun onResponse(
+                call: Call<SpotApiResponse?>,
+                response: Response<SpotApiResponse?>
+            ) {
+                if (response.code() == 200){
+                    Log.e("updateSpot", "onResponse: ${response.body()}")
+                    val intent = Intent(this@BookParkingActivity, ReviewSummaryActivity::class.java)
+                    intent.putExtra("reservationID", reservationID)
+                    intent.putExtra("bookingInfo", bookingInfo)
+                    startActivity(intent)
+                }
+            }
+
+            override fun onFailure(call: Call<SpotApiResponse?>, t: Throwable) {
+                Log.e("updateSpot", "onResponse: $t")
+            }
+        })
+    }
+
+    private fun createReservation(bodyRequest: ReservationApiBody, bookingInfo: BookingInfo){
+        val apiService = ParkingApiClient.create()
+        val call = apiService.createReservation(bodyRequest)
+        call.enqueue(object : Callback<ReservationResponse?> {
+            override fun onResponse(
+                call: Call<ReservationResponse?>,
+                response: Response<ReservationResponse?>
+            ) {
+                if (response.isSuccessful){
+                    val reservationsResponse = response.body()
+                    Log.e("post/reservation/create", "onResponse: ${response.code()}")
+
+                    val lastReservation = reservationsResponse!!.reservations.lastOrNull()
+                    if (lastReservation != null) {
+                        val reservationId = lastReservation.id
+                        updateSpot(bookingInfo, reservationId)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ReservationResponse?>, t: Throwable) {
+                Log.e("post/reservation/create", "onFailure: $t")
+            }
+        })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setColorStatusBar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window: Window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.statusBarColor = Color.WHITE
         }
-        ref.addValueEventListener(listener)
+    }
+
+    private fun binding(){
+        dateSelect = binding.dateSelect
+        shSelect = binding.shSelect
+        ehSelect = binding.ehSelect
+        btContinue = binding.btnContinue
+        tvDate = binding.tvDate
+        tvStartHour = binding.tvStartHour
+        tvEndHour = binding.tvEndHour
+        tvTotalCost = binding.totalCost
+        tvHoursQuantity = binding.hourQuantity
+        ivSlotA = binding.imageSlotA
+        ivSlotB = binding.imageSlotB
+        ivSlotC = binding.imageSlotC
+        radioGroup = binding.radioGroup
+        radioSlotA = binding.radioSlotA
+        radioSlotB = binding.radioSlotB
+        radioSlotC = binding.radioSlotC
     }
 }

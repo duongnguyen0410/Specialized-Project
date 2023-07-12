@@ -39,6 +39,8 @@ import torch
 import serial
 import time
 
+import easyocr
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
@@ -174,6 +176,7 @@ def run(
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         annotator.box_label(xyxy, label, color=colors(c, True))
+                        
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
@@ -185,18 +188,15 @@ def run(
                     windows.append(p)
                     cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
-                cv2.imshow(str(p), im0)
+                cv2.imshow("Plate detection", im0)
 
                 if cv2.waitKey(1) == ord('c'): 
                     if not os.path.exists(capture_dir):
                         os.makedirs(capture_dir)
-
                     file_count = len(os.listdir(capture_dir))
-                    image_name = f"captured_image_{file_count+1}.jpg"
-                    image_path = os.path.join(capture_dir, image_name)
-                    cv2.imwrite(image_path, im0)
-
-                    cv2.destroyAllWindows()
+                    image_name = "crop_image.jpg"
+                    save_one_box(xyxy, imc, file=save_dir / image_name, BGR=True)
+                    OCR(save_dir / image_name)
                     exit(0)
 
             # Save results (image with detections)
@@ -274,25 +274,20 @@ def serial_comm():
     ser = serial.Serial('COM6', 9600)
     data = 'accept'
     ser.write(data.encode())
-    while True:
-        received_data = ser.readline()
-        decoded_data = received_data.decode().strip()
-        print(decoded_data)
-    ser.close()
+
+def OCR(path):
+    IMAGE_PATH = str(path)
+    reader = easyocr.Reader(['en'])
+    result = reader.readtext(IMAGE_PATH)
+    plate = ' '.join(detect[1] for detect in result)
+    print("EXTRACT: ", plate)
     
-    # ser = serial.Serial('COM5', 9600) 
-    # data = "accept"
-    # ser.write(data.encode())
-    
-    # received_data = ser.readline()
-    # decoded_data = received_data.decode().strip()
-    # print(decoded_data)
 
 if __name__ == '__main__':
     opt = parse_opt()
 
     if (scan_qr_code()):
-        serial_comm()    
+        #serial_comm()    
         main(opt)
     else:
         print("Invalid code.")

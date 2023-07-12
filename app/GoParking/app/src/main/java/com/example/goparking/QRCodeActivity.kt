@@ -2,8 +2,12 @@ package com.example.goparking
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Window
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.goparking.databinding.ActivityQrcodeBinding
@@ -23,17 +27,25 @@ class QRCodeActivity : AppCompatActivity() {
 
     private lateinit var ivQrCode: ImageView
 
+    private var idSpot001 = "64aad77d51c18b0ec38d2ae4"
+    private var idSpot002 = "64aad78651c18b0ec38d2ae5"
+    private var idSpot003 = "64aad77d51c18b0ec38d2ae6"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityQrcodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setColorStatusBar()
+
         val bookingInfo = intent.getSerializableExtra("bookingInfo") as? BookingInfo
+        val reservationID = intent.getStringExtra("reservationID")
+        Log.e("reservationID", "onCreate: $reservationID")
+        Log.e("reservationID", "onCreate: $bookingInfo")
 
         if (bookingInfo != null) {
-            val id = bookingInfo.id
-            val parkingSpot = bookingInfo.parkingSpot
+            var parkingSpot = bookingInfo.parkingSpot
             val date = bookingInfo.date
             val duration = bookingInfo.duration
             val hours = bookingInfo.hours
@@ -42,7 +54,22 @@ class QRCodeActivity : AppCompatActivity() {
             tvDate.text = date
 
             tvParkingSpot = binding.tvParkingSpot
-            tvParkingSpot.text = parkingSpot
+            when (parkingSpot){
+                idSpot001 -> {
+                    parkingSpot = "Spot 001"
+                    tvParkingSpot.text = parkingSpot
+                }
+
+                idSpot002 -> {
+                    parkingSpot = "Spot 002"
+                    tvParkingSpot.text = parkingSpot
+                }
+
+                idSpot003 -> {
+                    parkingSpot = "Spot 003"
+                    tvParkingSpot.text = parkingSpot
+                }
+            }
 
             tvHours = binding.tvHours
             tvHours.text = hours
@@ -53,7 +80,7 @@ class QRCodeActivity : AppCompatActivity() {
             ivQrCode = binding.qrCodeImageView
             try {
                 val bitMatrix: BitMatrix = QRCodeWriter().encode(
-                    id,
+                    reservationID,
                     BarcodeFormat.QR_CODE,
                     300,
                     300
@@ -76,7 +103,14 @@ class QRCodeActivity : AppCompatActivity() {
             }
 
         }
+    }
 
-
+    private fun setColorStatusBar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window: Window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = Color.parseColor("#BC0063")
+        }
     }
 }
