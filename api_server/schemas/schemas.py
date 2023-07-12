@@ -16,6 +16,7 @@ def spotEntity(item) -> dict:
         "id": str(item["_id"]),
         "spot_id": item.get("spot_id"),
         "status": item.get("status"),
+        "lp_detected": item.get("lp_detected"),
         "latest_reservation": item.get("latest_reservation")
     }
     if spot_entity["latest_reservation"] is not None:
