@@ -12,21 +12,36 @@ async def create_spot(spot: Spot):
     db["spots"].insert_one(dict(spot))
     return spotsEntity(db["spots"].find())
 
+@router.post('/spot/lp/detected/{id}')
+async def post_lp_detected(id, license_plate: str):
+    db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
+        "$set": {
+            "lp_detected": license_plate
+        }
+    })
+    return spotEntity(db["spots"].find_one({"_id": ObjectId(id)}))
+
+
 @router.put('/spot/update/{id}')
 async def update_spot(id, state: str):
-    if state == "reserved" or state == "occupied":
+    if state == "reserved" or "occupied":
         latest_reservation = db["reservations"].find({"spot_id": id}).sort("_id", -1).limit(1)
         latest_reservation_data = latest_reservation[0]
         db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
             "$set": {
                 "status": state,
                 "latest_reservation": latest_reservation_data
+            },
+            "$unset": {
+                "lp_detected": ""
             }
         })
     else:
         db["spots"].find_one_and_update({"_id": ObjectId(id)}, {
             "$set": {"status": state},
-            "$unset": {"latest_reservation": ""}
+            "$unset": {
+                "latest_reservation": "",
+                "lp_detected": ""}
         })
 
     return spotEntity(db["spots"].find_one({"_id": ObjectId(id)}))
