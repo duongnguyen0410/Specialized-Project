@@ -71,9 +71,9 @@ class BookParkingActivity : AppCompatActivity() {
     private var diffInMinutes by Delegates.notNull<Long>()
     private lateinit var formattedCost: String
 
-    private var idSpotA = "64aad77d51c18b0ec38d2ae4"
-    private var idSpotB = "64aad78651c18b0ec38d2ae5"
-    private var idSpotC = "64aad78c51c18b0ec38d2ae6"
+    private var idSpotA = "655877227287c1d104e6f527"
+    private var idSpotB = "655877297287c1d104e6f528"
+    private var idSpotC = "6558772e7287c1d104e6f529"
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

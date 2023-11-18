@@ -27,9 +27,9 @@ class QRCodeActivity : AppCompatActivity() {
 
     private lateinit var ivQrCode: ImageView
 
-    private var idSpot001 = "64aad77d51c18b0ec38d2ae4"
-    private var idSpot002 = "64aad78651c18b0ec38d2ae5"
-    private var idSpot003 = "64aad77d51c18b0ec38d2ae6"
+    private var idSpot001 = "655877227287c1d104e6f527"
+    private var idSpot002 = "655877297287c1d104e6f528"
+    private var idSpot003 = "6558772e7287c1d104e6f529"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

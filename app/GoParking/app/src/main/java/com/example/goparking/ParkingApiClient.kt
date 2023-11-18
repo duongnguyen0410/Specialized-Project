@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ParkingApiClient {
 
-    private const val BASE_URL = "http://192.168.0.101:8000"
+    private const val BASE_URL = "http://192.168.1.24:8000"
 
     fun create(): ParkingApiService {
         val client = OkHttpClient.Builder().build()
